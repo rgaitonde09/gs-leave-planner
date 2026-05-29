@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GS Leave Planner</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">OPM / GSA sourced</p>
+        <h1>GS Leave Planner</h1>
+      </div>
+      <div class="topbar__facts" aria-label="policy facts">
+        <span>240h annual ceiling</span>
+        <span>4h sick accrual</span>
+        <span id="leaveYearChip">Leave year</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="surface inputs">
+        <div class="section-head">
+          <h2>Inputs</h2>
+          <button class="ghost" id="resetButton" type="button">Reset</button>
+        </div>
+
+        <div class="field-grid">
+          <label>
+            <span>Current date</span>
+            <input id="currentDate" type="date" value="2026-05-28">
+          </label>
+          <label>
+            <span>Annual leave accrual tier</span>
+            <select id="serviceTier">
+              <option value="lt3">Less than 3 years: 4h per pay period</option>
+              <option value="mid" selected>3 to 14 years: 6h, 10h last pay period</option>
+              <option value="gte15">15 or more years: 8h per pay period</option>
+            </select>
+          </label>
+          <label>
+            <span>Annual leave / PTO hours</span>
+            <input id="annualBalance" type="number" min="0" step="0.25" value="168">
+          </label>
+          <label>
+            <span>Sick leave hours</span>
+            <input id="sickBalance" type="number" min="0" step="0.25" value="80">
+          </label>
+          <label>
+            <span>Comp time hours</span>
+            <input id="compBalance" type="number" min="0" step="0.25" value="16">
+          </label>
+          <label>
+            <span>Schedule category</span>
+            <select id="scheduleType">
+              <option value="standard">Standard</option>
+              <option value="compressed">Compressed</option>
+              <option value="flexible">Flexible</option>
+              <option value="maxiflex">Maxiflex</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="checkline">
+          <input id="balanceIncludesCurrentPeriod" type="checkbox">
+          <span>Balances already include the current pay period accrual</span>
+        </label>
+
+        <div class="subhead">
+          <h3>Work Schedule</h3>
+          <div class="button-row" role="group" aria-label="schedule presets">
+            <button class="small" data-preset="standard" type="button">5x8</button>
+            <button class="small" data-preset="compressed54" type="button">5/4/9</button>
+            <button class="small" data-preset="compressed410" type="button">4x10</button>
+            <button class="small" data-preset="maxiflex" type="button">Maxiflex</button>
+          </div>
+        </div>
+        <div id="scheduleGrid" class="schedule-grid"></div>
+        <div id="scheduleTotal" class="microcopy"></div>
+
+        <div class="subhead">
+          <h3>Leave Dates</h3>
+          <button class="small primary" id="addRequest" type="button">Add leave</button>
+        </div>
+        <div class="table-wrap">
+          <table class="request-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Charge</th>
+                <th>Hours/day</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="requestRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="surface results">
+        <div class="section-head">
+          <h2>Plan</h2>
+          <div class="button-row">
+            <button class="small" id="importMarkdownButton" type="button">Import .md</button>
+            <button class="small" id="exportMarkdownButton" type="button">Export .md</button>
+            <button class="small primary" id="calculateButton" type="button">Calculate</button>
+            <input id="importMarkdownFile" type="file" accept=".md,.markdown,text/markdown,text/plain" hidden>
+          </div>
+        </div>
+        <div id="importExportStatus" class="microcopy action-status" aria-live="polite"></div>
+
+        <div id="statusBanner" class="status-banner"></div>
+        <div id="metrics" class="metrics"></div>
+
+        <div class="split">
+          <div>
+            <h3>Use-Or-Lose</h3>
+            <div id="useOrLosePanel" class="readout"></div>
+          </div>
+          <div>
+            <h3>Follow-Ups</h3>
+            <ul id="followUps" class="question-list"></ul>
+          </div>
+        </div>
+
+        <div class="split">
+          <div>
+            <h3>Leave Day Detail</h3>
+            <div id="dayDetails" class="compact-list"></div>
+          </div>
+          <div>
+            <h3>Balance Timeline</h3>
+            <div id="timeline" class="compact-list"></div>
+          </div>
+        </div>
+
+        <details class="sources">
+          <summary>Sources and assumptions</summary>
+          <div id="sourcesList"></div>
+        </details>
+      </section>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
